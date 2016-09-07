@@ -3,6 +3,8 @@
 
 # define LOOP_LIMIT 20
 
+//char	**get_
+
 int	main(int ac, char **av)
 {
 	pid_t	proc_id;
