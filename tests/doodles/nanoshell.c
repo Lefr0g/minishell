@@ -1,29 +1,11 @@
 #include "libft.h"
 #include "libft_extra.h"
 
-char	*concatenate_args(int ac, char **av)
+int		ns_print_prompt(void)
 {
-	int		i;
-	int		len;
-	char	*result;
-	char	*buf;
-
-	i = 0;
-	len = 0;
-	while (++i < ac)
-		len += ft_strlen(av[i]);
-	buf = ft_strnew(len + 1);
-	i = 0;
-	while (++i < ac)
-	{
-		ft_strcat(buf, av[i]);
-		ft_strcat(buf, " ");
-	}
-	result = ft_strtrim(buf);
-	ft_strdel(&buf);
-	return (result);
+	ft_putstr("$> ");
+	return (0);
 }
-
 
 int	ns_path_loop_exec(char *file, char **argv,
 		char **envp)
@@ -49,11 +31,88 @@ int	ns_path_loop_exec(char *file, char **argv,
 	{
 		path = ft_strjoin(dir[i], file);
 		ft_printf("trying on \033[32m%s\033[0m\n", path);
-	//	ret = execve(file, argv, envp);
-		ret = execve("/bin/ls", argv, envp);
+		ret = execve(path, argv, envp);
+	//	ret = execve("/bin/ls", argv, envp);
 		ft_printf("execve returned %d\n", ret);
 		ft_strdel(&path);
 		i++;
+	}
+	return (0);
+}
+
+void	ns_normalize_blanks(char *c)
+{
+	if (*c == '\t')
+		*c = ' ';
+}
+
+/*
+ *	This function takes one command line from stdin, replaces tabs with
+ *	spaces, then splits the line into an array of strings using
+ *	spaces as separator.
+*/
+char	**ns_parse_line(char *line)
+{
+	char	**tab;
+
+	ft_striter(line, &ns_normalize_blanks);
+
+	ft_printf("ns_parse_line, normalized line = '%s'\n", line);
+
+	tab = ft_strsplit(line, ' ');
+//*
+	int		i;
+	i = 0;
+	while (tab && tab[i])
+	{
+		ft_printf("tab[%d] = %s\n", i, tab[i]);
+		i++;
+	}
+//*/
+	return (tab);
+}
+
+/*
+ *	Main command interpretation function
+ *	- Get stdin line
+ *	- Parse line
+ *	- Search file on path and execute
+ *	- Repeat
+*/
+int		ns_main_loop(void)
+{
+	char	*line;
+	char	**args;
+	int		i;
+	int		statloc;
+	int		options;
+
+	statloc = 0;
+	options = 0;
+
+
+	line = ft_strnew(10);
+
+	ns_print_prompt();
+	while (get_next_line(STDIN_FILENO, &line))
+	{
+		args = ns_parse_line(line);
+		if (!fork())
+		{
+			ft_printf("\033[34mThis is child process\033[0m\n");
+			ft_printf("\033[34mchild about to exec...\033[0m\n");
+			sleep(1);
+			ft_printf("\033[34mchild exec now\033[0m\n");
+			ns_path_loop_exec(args[0], args, NULL);
+		}
+		else
+		{
+			ft_printf("\033[33mThis is parent process\033[0m\n");
+			ft_printf("\033[33mparent process waiting...\033[0m\n");
+			waitpid(-1, &statloc, options);
+			ft_printf("\033[33mChild process over\033[0m\n");
+		}
+		ns_print_prompt();
 	}
 	return (0);
 }
@@ -71,44 +130,11 @@ int		main(int ac, char **av)
 		ft_printf("%s\n", environ[i]);
 	*/
 
-	if (ac == 1)
-		ft_putstr("please enter an argument\n");
+	if (ac != 1)
+		ft_putstr("Invalid argument. This program doesn't take any.\n");
 	else
 	{
-		ft_printf("ac = %d\n", ac);
-		sub_ac = ac - 1;
-
-		if (!(sub_av = ft_strarray_dup(av)))
-			return (-5);
-
-		i = 0;
-		while (i <= ac)
-		{
-		//	sub_av[i] = av[i + 1];
-			ft_printf("sub_av[%d] = '%s'\n", i, sub_av[i]);
-			i++;
-		}
-//		sub_av[i] = NULL;
-
-		ft_printf("Executing command '%s' given as parameter :\n", av[1]);
-
-		// TODO: recherche et essais successifs dans le PATH
-		errno = 0;
-		ft_strdel(&sub_av[0]);
-
-		ns_path_loop_exec(sub_av[1], &sub_av[1], environ);
-
-
-		if (errno)
-			ft_printf("\033[31m////// Errno %d : %s\033[0m\n",
-					errno, strerror(errno));
-		ft_printf("Execution completed\n");
-/*
-		strbuf = concatenate_args(ac, av);
-		if (strbuf)
-			ft_printf("arguments : \"%s\"\n", strbuf);
-*/
+		ns_main_loop();
 	}
-//	ft_strdel(&strbuf);
 	return (0);
 }
