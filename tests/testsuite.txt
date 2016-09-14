@@ -1,0 +1,22 @@
+(Via intra)
+
+la commande cat ou plutot quitter cat sans quitter le shell
+unsetenv le path et lancer une commande
+unsetenv le home et faire cd
+unsetenv sans argument
+juste apuiyer sur entree
+espace puis entree
+ctrl + c
+ctrl + d
+via signal catcher les segfault pour les afficher ce qui permet de veriffier que le fils segfault pas car si le fils segfault c'est quand meme un segfault et ca vaux 0
+enlever les droit d'un dossier et essayer d'y entre avec cd
+verifier la valeur de sortie du term "echo $?"
+lancer le shell avec env -i
+"./ft_minishell1 < /dev/rand" essaye de ne pas avoir de boucle infinie
+
+Sinon afficher tout les signaux
+Ctrl + \ (je sais pas ce que c'est mais moi ca segfault)
+cd avec 2 argument
+Unset PATH et lancer une commande
+env -i COUCOU=":)" env (depuis ton shell biensur)
+mkdir "Salut Vatourni"

@@ -2,8 +2,6 @@
 
 int		main(int ac, char **av)
 {
-	extern char	**environ;
-
 	(void)av;
 	/*
 	i = -1;

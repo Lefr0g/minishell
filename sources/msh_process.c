@@ -20,11 +20,11 @@ int		msh_main_loop(void)
 	options = 0;
 	line = ft_strnew(10);
 	msh_print_prompt();
-	while (get_next_line(STDIN_FILENO, &line))
+	while ((get_next_line(STDIN_FILENO, &line)!= -1))
 	{
 		args = msh_parse_line(line);
 		pid_ret = fork();
-		if (!pid_ret)
+		if (!pid_ret && ft_strlen(args[0]))
 		{
 			msh_debug_print_color("This is child process\n", ANSI_FG_BLUE);
 			msh_debug_print_color("child about to exec...\n", ANSI_FG_BLUE);
