@@ -1,5 +1,34 @@
 #include "libft.h"
 #include "libft_extra.h"
+#include <sys/wait.h> // for linux
+
+
+/*
+ *	Multiprocess-compatible string color management, writing to stdout
+ *	Recommend using ANSI color codes as defined in libft_extra.h
+*/
+
+int		ft_putstr_color_each(char *str, char *color)
+{
+	int		i;
+	char	*out;
+
+	out = ft_strnew(10);
+	i = 0;
+	if (ft_strlen(color) != 5)
+		return (-1);
+	while (str[i])
+	{
+		ft_strcat(out, color);
+		ft_strncat(out, &str[i], 1);
+		ft_strcat(out, ANSI_RESET);
+		ft_putstr(out);
+		ft_strclr(out);
+		i++;
+	}
+	ft_strdel(&out);
+	return (i);
+}
 
 int		ns_print_prompt(void)
 {
@@ -23,7 +52,7 @@ int	ns_path_loop_exec(char *file, char **argv,
 	ft_printf("file = '%s'\n", file);
 	ft_printf("path = '%s'\n", path);
 	
-	dir = ft_strsplit(path, ':');
+	dir = ft_strsplit(path, ':'); // TODO : bugfix si \: dans un path
 
 	ret = -1;
 	i = 0;
@@ -86,6 +115,7 @@ int		ns_main_loop(void)
 	int		i;
 	int		statloc;
 	int		options;
+	int		pid_ret;
 
 	statloc = 0;
 	options = 0;
@@ -97,20 +127,26 @@ int		ns_main_loop(void)
 	while (get_next_line(STDIN_FILENO, &line))
 	{
 		args = ns_parse_line(line);
-		if (!fork())
+		pid_ret = fork();
+		if (!pid_ret)
 		{
-			ft_printf("\033[34mThis is child process\033[0m\n");
-			ft_printf("\033[34mchild about to exec...\033[0m\n");
+			ft_putstr_color_each("This is child process\n", ANSI_FG_BLUE);
+			ft_putstr_color_each("child about to exec...\n", ANSI_FG_BLUE);
 			sleep(1);
-			ft_printf("\033[34mchild exec now\033[0m\n");
+			ft_putstr_color_each("child exec now\n", ANSI_FG_BLUE);
 			ns_path_loop_exec(args[0], args, NULL);
+		}
+		else if (pid_ret != -1)
+		{
+			ft_putstr_color_each("This is parent process\n", ANSI_FG_YELLOW);
+			ft_putstr_color_each("parent process waiting...\n", ANSI_FG_YELLOW);
+			waitpid(-1, &statloc, options);
+			ft_putstr_color_each("Child process over\n", ANSI_FG_YELLOW);
 		}
 		else
 		{
-			ft_printf("\033[33mThis is parent process\033[0m\n");
-			ft_printf("\033[33mparent process waiting...\033[0m\n");
-			waitpid(-1, &statloc, options);
-			ft_printf("\033[33mChild process over\033[0m\n");
+			ft_printf("fork() error, exiting\n");
+			exit(-1);
 		}
 		ns_print_prompt();
 	}
