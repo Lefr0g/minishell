@@ -37,7 +37,8 @@ ifeq ($(CC),gcc)
 	FLAGS += -std=gnu99
 endif
 
-SRCS = main.c
+SRCS = main.c msh_parsing.c msh_process.c msh_exec.c msh_prompt.c\
+	   msh_env.c msh_errormgt.c msh_debug.c libft_addition.c
 
 SRCDIR = sources/
 
