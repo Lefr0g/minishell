@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   msh_exec.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: amulin <amulin@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/09/15 18:29:07 by amulin            #+#    #+#             */
+/*   Updated: 2016/09/15 18:29:08 by amulin           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	msh_getcwd(t_msh_vars *v)
@@ -28,7 +40,6 @@ int	msh_exec_cwd(char *file, char **argv, t_msh_vars *v)
 	return (ret);
 }
 
-
 /*
 **	Target flow:
 **	- If command is a built-in execute it
@@ -44,6 +55,7 @@ int	msh_exec(char *file, char **argv, t_msh_vars *v)
 
 	if (ft_strchr(file, '/'))
 		msh_exec_cwd(file, argv, v);
+	
 	file = ft_strjoin("/", file);
 	path = msh_getenv("PATH", v->environ);
 	if (MSH_DEBUG_MODE)

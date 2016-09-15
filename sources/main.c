@@ -1,14 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: amulin <amulin@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/09/15 18:28:21 by amulin            #+#    #+#             */
+/*   Updated: 2016/09/15 18:28:23 by amulin           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
-
-int		msh_init_vars(t_msh_vars *v)
-{
-	extern char	**environ;
-
-	v->environ = ft_strarray_dup(environ);
-	v->locales = (char**)malloc(sizeof(char*));
-	ft_bzero(&(v->locales[0]), 1);
-	return (0);
-}
 
 int		main(int ac, char **av)
 {

@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: amulin <amulin@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/09/15 18:30:18 by amulin            #+#    #+#             */
+/*   Updated: 2016/09/15 18:30:21 by amulin           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -10,6 +20,7 @@
 # define PROG_NAME "minishell"
 
 # define MSH_DEBUG_MODE 0
+# define MSH_BUILTINS_ARRAY_SIZE 7
 
 // check out /usr/include/sysexits.h for some error code definitions
 // More info on http://tldp.org/LDP/abs/html/exitcodes.html
@@ -19,6 +30,7 @@ typedef struct	s_msh_vars
 {
 	char	**environ;
 	char	**locales;
+	char	**builtins;
 	char	*cwd;
 }				t_msh_vars;
 
@@ -26,6 +38,10 @@ typedef struct	s_msh_vars
 **	main.c
 */
 int		main(int ac, char **av);
+
+/*
+**	msh_init.c
+*/
 int		msh_init_vars(t_msh_vars *v);
 
 /*
@@ -42,6 +58,7 @@ int		msh_main_loop(t_msh_vars *v);
 /*
 **	msh_exec.c
 */
+int		msh_getcwd(t_msh_vars *v);
 int		msh_exec_cwd(char *file, char **argv, t_msh_vars *v);
 int		msh_exec(char *file, char **argv, t_msh_vars *v);
 
@@ -69,6 +86,7 @@ void	msh_debug_print_color(char *str, char *color);
 **	libft_addition.c
 */
 int		ft_putstr_color_each(char *str, char *color);
+char	*ft_strarray_chr(char *needle, char **haystack);
 
 
 #endif

@@ -27,4 +27,12 @@ int		ft_putstr_color_each(char *str, char *color)
 	return (i);
 }
 
+/*
+**	Alias for ft_find_double_str, which name sucks
+**	ft_strarray_chr() - locate string in string array
+*/
 
+char	*ft_strarrayi_chr(char *needle, char **haystack)
+{
+	return (ft_find_double_str(needle, haystack));
+}
