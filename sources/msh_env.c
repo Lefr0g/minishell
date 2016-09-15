@@ -1,8 +1,7 @@
 #include "minishell.h"
 
-char	*msh_getenv(const char *name)
+char	*msh_getenv(const char *name, char **environ)
 {
-	extern char	**environ;
 	char		*str;
 	int			i;
 

@@ -15,10 +15,18 @@
 // More info on http://tldp.org/LDP/abs/html/exitcodes.html
 # define EX_ILLEG 127 // command not found
 
+typedef struct	s_msh_vars
+{
+	char	**environ;
+	char	**locales;
+	char	*cwd;
+}				t_msh_vars;
+
 /*
 **	main.c
 */
 int		main(int ac, char **av);
+int		msh_init_vars(t_msh_vars *v);
 
 /*
 **	msh_parsing.c
@@ -29,12 +37,13 @@ char	**msh_parse_line(char *line);
 /*
 **	msh_process.c
 */
-int		msh_main_loop(void);
+int		msh_main_loop(t_msh_vars *v);
 
 /*
 **	msh_exec.c
 */
-int		msh_path_loop_exec(char *file, char **argv, char **envp);
+int		msh_exec_cwd(char *file, char **argv, t_msh_vars *v);
+int		msh_exec(char *file, char **argv, t_msh_vars *v);
 
 /*
 **	msh_prompt.c
@@ -44,7 +53,7 @@ int		msh_print_prompt(void);
 /*
 **	msh_env.c
 */
-char	*msh_getenv(const char *str);
+char	*msh_getenv(const char *str, char **environ);
 
 /*
 **	msh_errormgt.c

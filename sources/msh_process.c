@@ -7,7 +7,7 @@
  *	- Search file on path and execute
  *	- Repeat
 */
-int		msh_main_loop(void)
+int		msh_main_loop(t_msh_vars *v)
 {
 	char	*line;
 	char	**args;
@@ -30,7 +30,7 @@ int		msh_main_loop(void)
 			msh_debug_print_color("child about to exec...\n", ANSI_FG_BLUE);
 		//	sleep(1);
 			msh_debug_print_color("child exec now\n", ANSI_FG_BLUE);
-			msh_path_loop_exec(args[0], args, NULL);
+			msh_exec(args[0], args, v);
 		}
 		else if (pid_ret != -1)
 		{
