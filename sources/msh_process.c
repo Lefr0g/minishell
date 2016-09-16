@@ -6,7 +6,7 @@
 /*   By: amulin <amulin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/15 18:29:25 by amulin            #+#    #+#             */
-/*   Updated: 2016/09/15 18:29:26 by amulin           ###   ########.fr       */
+/*   Updated: 2016/09/16 16:50:08 by amulin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,13 @@ int		msh_main_loop(t_msh_vars *v)
 			msh_debug_print_color("child about to exec...\n", ANSI_FG_BLUE);
 		//	sleep(1);
 			msh_debug_print_color("child exec now\n", ANSI_FG_BLUE);
-			if (!(buf = msh_is_builtin(args[0], v->builtins)))
+			if (!(buf = msh_is_builtin(args[0], v->builtin_name)))
 				msh_exec(args[0], args, v);
 			else
 			{
 				ft_printf("%s is a builtin\n", buf);
 				ft_putstr_color_each("(built-in, WIP)\n", ANSI_FG_CYAN);
+				msh_handle_builtin(buf, v);
 			}	
 		}
 		else if (pid_ret != -1)

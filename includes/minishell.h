@@ -6,7 +6,7 @@
 /*   By: amulin <amulin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/15 18:30:18 by amulin            #+#    #+#             */
-/*   Updated: 2016/09/15 18:30:21 by amulin           ###   ########.fr       */
+/*   Updated: 2016/09/16 17:07:41 by amulin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,25 @@
 # define MSH_DEBUG_MODE 0
 # define MSH_BUILTINS_ARRAY_SIZE 7
 
+# define MSH_BUILTIN_0 "echo"
+# define MSH_BUILTIN_1 "cd"
+# define MSH_BUILTIN_2 "setenv"
+# define MSH_BUILTIN_3 "unsetenv"
+# define MSH_BUILTIN_4 "env"
+# define MSH_BUILTIN_5 "exit"
+
 // check out /usr/include/sysexits.h for some error code definitions
 // More info on http://tldp.org/LDP/abs/html/exitcodes.html
 # define EX_ILLEG 127 // command not found
+
+typedef int(*t_builtin_handler)(void);
 
 typedef struct	s_msh_vars
 {
 	char	**environ;
 	char	**locales;
-	char	**builtins;
+	char	**builtin_name;
+	t_builtin_handler	*builtin_func;
 	char	*cwd;
 }				t_msh_vars;
 
@@ -42,13 +52,18 @@ int		main(int ac, char **av);
 /*
 **	msh_init.c
 */
-int		msh_init_builtins(t_msh_vars *v);
+int		msh_init_builtins_names(t_msh_vars *v);
+int		msh_init_builtins_handlers(t_msh_vars *v);
 int		msh_init_vars(t_msh_vars *v);
 
 /*
 **	msh_builtins.c
 */
 char	*msh_is_builtin(char *cmd, char **builtins);
+int		msh_handle_builtin(char *cmd, t_msh_vars *v);
+int		msh_get_builtin_index(char *cmd, char **builtins);
+int		msh_handle_exit(void);
+int		msh_handle_default(void);
 
 /*
 **	msh_parsing.c

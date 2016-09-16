@@ -6,7 +6,7 @@
 /*   By: amulin <amulin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/15 18:29:14 by amulin            #+#    #+#             */
-/*   Updated: 2016/09/15 18:29:15 by amulin           ###   ########.fr       */
+/*   Updated: 2016/09/16 15:53:32 by amulin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ char	**msh_parse_line(char *line)
 	i = 0;
 	while (tab && tab[i])
 	{
-		if (i == 0 && !ft_strcmp(tab[i], "exit"))
-			exit(0);
+//		if (i == 0 && !ft_strcmp(tab[i], "exit"))
+//			exit(0);
 		if (MSH_DEBUG_MODE)
 			ft_printf("tab[%d] = %s\n", i, tab[i]);
 		i++;
