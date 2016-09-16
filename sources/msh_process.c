@@ -28,6 +28,8 @@ int		msh_main_loop(t_msh_vars *v)
 	int		options;
 	int		pid_ret;
 
+	char	*buf;
+
 	statloc = 0;
 	options = 0;
 	line = ft_strnew(10);
@@ -35,6 +37,7 @@ int		msh_main_loop(t_msh_vars *v)
 	while ((get_next_line(STDIN_FILENO, &line)!= -1))
 	{
 		args = msh_parse_line(line);
+
 		pid_ret = fork();
 		if (!pid_ret && ft_strlen(args[0]))
 		{
@@ -42,7 +45,13 @@ int		msh_main_loop(t_msh_vars *v)
 			msh_debug_print_color("child about to exec...\n", ANSI_FG_BLUE);
 		//	sleep(1);
 			msh_debug_print_color("child exec now\n", ANSI_FG_BLUE);
-			msh_exec(args[0], args, v);
+			if (!(buf = msh_is_builtin(args[0], v->builtins)))
+				msh_exec(args[0], args, v);
+			else
+			{
+				ft_printf("%s is a builtin\n", buf);
+				ft_putstr_color_each("(built-in, WIP)\n", ANSI_FG_CYAN);
+			}	
 		}
 		else if (pid_ret != -1)
 		{

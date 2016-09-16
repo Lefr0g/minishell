@@ -38,7 +38,8 @@ ifeq ($(CC),gcc)
 endif
 
 SRCS = main.c msh_parsing.c msh_process.c msh_exec.c msh_prompt.c\
-	   msh_env.c msh_errormgt.c msh_debug.c libft_addition.c
+	   msh_env.c msh_errormgt.c msh_debug.c libft_addition.c\
+	   msh_init.c msh_builtins.c
 
 SRCDIR = sources/
 

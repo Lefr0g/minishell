@@ -12,7 +12,16 @@
 
 #include "minishell.h"
 
-int	msh_is_builtin(char	*cmd, char **builtins_list)
+char	*msh_is_builtin(char *cmd, char **builtins)
 {
-	return (0);
+	int	i;
+
+	i = 0;
+	while (i < MSH_BUILTINS_ARRAY_SIZE)
+	{
+		if (!ft_strcmp(cmd, builtins[i]))
+			return (builtins[i]);
+		i++;
+	}
+	return (NULL);
 }

@@ -42,7 +42,13 @@ int		main(int ac, char **av);
 /*
 **	msh_init.c
 */
+int		msh_init_builtins(t_msh_vars *v);
 int		msh_init_vars(t_msh_vars *v);
+
+/*
+**	msh_builtins.c
+*/
+char	*msh_is_builtin(char *cmd, char **builtins);
 
 /*
 **	msh_parsing.c

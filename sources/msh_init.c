@@ -10,19 +10,19 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.c"
+#include "minishell.h"
 
 int		msh_init_builtins(t_msh_vars *v)
 {
 	if (!(v->builtins =
 				(char**)malloc(sizeof(char*) * MSH_BUILTINS_ARRAY_SIZE)))
 		return (-1);
-	ft_strdup(v->builtins[0], "echo");
-	ft_strdup(v->builtins[1], "cd");
-	ft_strdup(v->builtins[2], "setenv");
-	ft_strdup(v->builtins[3], "unsetenv");
-	ft_strdup(v->builtins[4], "env");
-	ft_strdup(v->builtins[5], "exit");
+	v->builtins[0] = ft_strdup("echo");
+	v->builtins[1] = ft_strdup("cd");
+	v->builtins[2] = ft_strdup("setenv");
+	v->builtins[3] = ft_strdup("unsetenv");
+	v->builtins[4] = ft_strdup("env");
+	v->builtins[5] = ft_strdup("exit");
 	v->builtins[6] = ft_strnew(1);
 	return (0);
 }
@@ -34,6 +34,6 @@ int		msh_init_vars(t_msh_vars *v)
 	v->environ = ft_strarray_dup(environ);
 	v->locales = (char**)malloc(sizeof(char*));
 	ft_bzero(&(v->locales[0]), 1);
-	ft_msh_init_builtins(v);
+	msh_init_builtins(v);
 	return (0);
 }

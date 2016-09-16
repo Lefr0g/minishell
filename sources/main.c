@@ -15,8 +15,8 @@
 int		main(int ac, char **av)
 {
 	t_msh_vars	v;
-
 	msh_init_vars(&v);
+
 	(void)v;
 	(void)av;
 	/*
