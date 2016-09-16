@@ -22,6 +22,14 @@ int		msh_handle_exit(char **args)
 int		msh_handle_echo(char **args)
 {
 	char	*buf;
+	int		i;
+
+	i = 0;
+	while (args[i])
+	{
+		ft_printf("args[%d] = %s\n", i, args[i]);
+		i++;
+	}
 
 	(void)args;
 	buf = ft_strnew(1);
@@ -41,18 +49,18 @@ int		msh_handle_default(char **args)
 **	Call the relevant routine for the given command
 */
 
-int		msh_handle_builtin(char *cmd, t_msh_vars *v)
+int		msh_handle_builtin(char **args, t_msh_vars *v)
 {
 	int	i;
 
-	if ((i = msh_get_builtin_index(cmd, v->builtin_name)) == -1)
+	if ((i = msh_get_builtin_index(args[0], v->builtin_name)) == -1)
 	{
 		ft_putstr_fd("Error: built-in not found\n", STDERR_FILENO);
 		return (-1);
 	}
 	else if (MSH_DEBUG_MODE)
-		ft_printf("%s%s%s is a built-in\n", ANSI_FG_CYAN, cmd, ANSI_RESET);
-	v->builtin_func[i](NULL);
+		ft_printf("%s%s%s is a built-in\n", ANSI_FG_CYAN, args[0], ANSI_RESET);
+	v->builtin_func[i](args);
 	return (0);
 }
 

@@ -67,7 +67,7 @@ int		msh_main_loop(t_msh_vars *v)
 	{
 		args = msh_parse_line(line);
 		if (args && args[0] && (buf = msh_is_builtin(args[0], v->builtin_name)))
-			msh_handle_builtin(buf, v);
+			msh_handle_builtin(args, v);
 		else if (args && args[0])
 			msh_fork(args, v);
 		if (args)

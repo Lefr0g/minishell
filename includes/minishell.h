@@ -61,7 +61,7 @@ int		msh_init_vars(t_msh_vars *v);
 **	msh_builtins.c
 */
 char	*msh_is_builtin(char *cmd, char **builtins);
-int		msh_handle_builtin(char *cmd, t_msh_vars *v);
+int		msh_handle_builtin(char **args, t_msh_vars *v);
 int		msh_get_builtin_index(char *cmd, char **builtins);
 int		msh_handle_exit(char **args);
 int		msh_handle_echo(char **args);
