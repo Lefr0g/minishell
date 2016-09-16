@@ -75,6 +75,7 @@ char	**msh_parse_line(char *line);
 **	msh_process.c
 */
 int		msh_main_loop(t_msh_vars *v);
+void	msh_fork(char **args, t_msh_vars *v);
 
 /*
 **	msh_exec.c

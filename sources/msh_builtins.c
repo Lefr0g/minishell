@@ -37,6 +37,8 @@ int		msh_handle_builtin(char *cmd, t_msh_vars *v)
 		ft_putstr_fd("Error: built-in not found\n", STDERR_FILENO);
 		return (-1);
 	}
+	else if (MSH_DEBUG_MODE)
+		ft_printf("%s%s%s is a built-in\n", ANSI_FG_CYAN, cmd, ANSI_RESET);
 	v->builtin_func[i]();
 	return (0);
 }
