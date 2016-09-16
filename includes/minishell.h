@@ -31,17 +31,18 @@
 
 // check out /usr/include/sysexits.h for some error code definitions
 // More info on http://tldp.org/LDP/abs/html/exitcodes.html
+// TODO: add all relevant codes and functions to errmgmt.h
 # define EX_ILLEG 127 // command not found
 
-typedef int(*t_builtin_handler)(void);
+typedef int(*t_builtin_handler)(char **args);
 
 typedef struct	s_msh_vars
 {
-	char	**environ;
-	char	**locales;
-	char	**builtin_name;
+	char				**environ;
+	char				**locales;
+	char				**builtin_name;
+	char				*cwd;
 	t_builtin_handler	*builtin_func;
-	char	*cwd;
 }				t_msh_vars;
 
 /*
@@ -62,8 +63,9 @@ int		msh_init_vars(t_msh_vars *v);
 char	*msh_is_builtin(char *cmd, char **builtins);
 int		msh_handle_builtin(char *cmd, t_msh_vars *v);
 int		msh_get_builtin_index(char *cmd, char **builtins);
-int		msh_handle_exit(void);
-int		msh_handle_default(void);
+int		msh_handle_exit(char **args);
+int		msh_handle_echo(char **args);
+int		msh_handle_default(char **args);
 
 /*
 **	msh_parsing.c

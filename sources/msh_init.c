@@ -33,7 +33,7 @@ int		msh_init_builtins_handlers(t_msh_vars *v)
 				(t_builtin_handler*)malloc(sizeof(t_builtin_handler)
 					* MSH_BUILTINS_ARRAY_SIZE)))
 		return (-1);
-	v->builtin_func[0] = &msh_handle_default;
+	v->builtin_func[0] = &msh_handle_echo;
 	v->builtin_func[1] = &msh_handle_default;
 	v->builtin_func[2] = &msh_handle_default;
 	v->builtin_func[3] = &msh_handle_default;

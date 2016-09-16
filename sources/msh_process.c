@@ -66,11 +66,12 @@ int		msh_main_loop(t_msh_vars *v)
 	while ((get_next_line(STDIN_FILENO, &line)!= -1))
 	{
 		args = msh_parse_line(line);
-		if ((buf = msh_is_builtin(args[0], v->builtin_name)))
+		if (args && args[0] && (buf = msh_is_builtin(args[0], v->builtin_name)))
 			msh_handle_builtin(buf, v);
-		else
+		else if (args && args[0])
 			msh_fork(args, v);
-		ft_strarray_del(&args);
+		if (args)
+			ft_strarray_del(&args);
 		msh_print_prompt();
 	}
 	return (0);

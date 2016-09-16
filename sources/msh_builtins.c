@@ -12,14 +12,27 @@
 
 #include "minishell.h"
 
-int		msh_handle_exit(void)
+int		msh_handle_exit(char **args)
 {
+	(void)args;
 	exit(0);
 	return (0);
 }
 
-int		msh_handle_default(void)
+int		msh_handle_echo(char **args)
 {
+	char	*buf;
+
+	(void)args;
+	buf = ft_strnew(1);
+	get_next_line(STDIN_FILENO, &buf);
+	ft_putendl(buf);
+	return (0);
+}
+
+int		msh_handle_default(char **args)
+{
+	(void)args;
 	ft_printf("Default built-in handler\n");
 	return (0);
 }
@@ -39,7 +52,7 @@ int		msh_handle_builtin(char *cmd, t_msh_vars *v)
 	}
 	else if (MSH_DEBUG_MODE)
 		ft_printf("%s%s%s is a built-in\n", ANSI_FG_CYAN, cmd, ANSI_RESET);
-	v->builtin_func[i]();
+	v->builtin_func[i](NULL);
 	return (0);
 }
 
