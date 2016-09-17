@@ -22,6 +22,40 @@ void	msh_normalize_blanks(char *c)
  *	This function takes one command line from stdin, replaces tabs with
  *	spaces, then splits the line into an array of strings using
  *	spaces as separator.
+ *	According to https://www.gnu.org/software/bash/manual/bash.html#Shell-Syntax
+ *	Bash parsing:
+ *	1. Reads its input from a file (see Shell Scripts), from a string supplied
+ *	as an argument to the -c invocation option (see Invoking Bash), or from 
+ *	the user’s terminal.
+ *	2. Breaks the input into words and operators, obeying the quoting rules
+ *	described in Quoting. These tokens are separated by metacharacters.
+ *	Alias expansion is performed by this step (see Aliases).
+ *	3. Parses the tokens into simple and compound commands (see Shell Commands).
+ *	4. Performs the various shell expansions (see Shell Expansions), breaking
+ *	the expanded tokens into lists of filenames (see Filename Expansion) and
+ *	commands and arguments.
+ *	5. Performs any necessary redirections (see Redirections) and removes
+ *	the redirection operators and their operands from the argument list.
+ *	6. Executes the command (see Executing Commands).
+ *	7. Optionally waits for the command to complete and collects its exit
+ *	status (see Exit Status).
+ *
+ *	TODO: implement the flow:
+ *	1. Quoting rule: string -> words / operators (tokens)
+ *		- Escape characters
+ *		- Single quotes
+ *		- Double quotes
+ *		- ANSI quotes
+ *	2. Alias expansion
+ *	3. Parse tokens -> simple commands / compound commands
+ *	4. Shell expansions
+ *	5. Redirections
+ *	6. Execution
+ *	7. loop back
+ *
+ *	Info
+ *	Bash metacharacters: A character that, when unquoted, separates words
+ *	' ', ‘|’, ‘&’, ‘;’, ‘(’, ‘)’, ‘<’, or ‘>’.
 */
 char	**msh_parse_line(char *line)
 {
