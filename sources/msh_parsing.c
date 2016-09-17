@@ -19,6 +19,83 @@ void	msh_normalize_blanks(char *c)
 }
 
 /*
+**	Cut the given line into a string array according to the double quotes
+**	parsing rule
+*/
+
+char	**msh_doublequotes(char *line)
+{
+	int		i;
+	int		j;
+	int		k;
+	char	**strtab;
+	int		openquotes;
+
+	(void)k;
+	(void)strtab;
+	k = ft_strcnt(line, '"');
+	if (!k)
+		return (NULL);
+	strtab = ft_strarray_new(k + 1);
+	openquotes = 0;
+	if (!line)
+		return (NULL);
+	i = 0;
+	j = 0;
+	k = 0;
+	while (line[i])
+	{
+		if (line[i] == '"' && (i == 0 || line[i - 1] != '\\') && !openquotes)
+		{
+			if (i)
+			{
+				strtab[k] = ft_strnew(i - j);
+				ft_strncpy(strtab[k], &line[j], i - j);
+				ft_printf("Created first string = %s\n", strtab[k]);
+				k++;
+			}
+			openquotes = 1;
+			i++;
+			j = i;
+			while (line[j] && openquotes)
+			{
+				if (line[j] == '"' && line[j - 1] != '\\')
+				{
+					ft_printf("dquote end check\n");
+					strtab[k] = ft_strnew(j - i);
+					ft_strncpy(strtab[k], &line[i], j - i);
+					k++;
+					openquotes = 0;
+					i = j + 1;
+				}
+				j++;
+			}
+		}
+		i++;
+	}
+	if (i != j + 1)
+	{
+		ft_printf("\" was not the last char, creating str for remains\n");
+		ft_printf("i = %d, j = %d\n", i, j);
+		strtab[k] = ft_strnew(i - j);
+		ft_strncpy(strtab[k], &line[j], i - j);
+		k++;
+	}
+	strtab[k] = ft_strnew(1);
+	if (strtab[k + 1])
+		ft_strdel(&strtab[k + 1]);
+	i = 0;
+	ft_putendl("CHECK");
+	while (strtab[i])
+	{
+		ft_printf("array[%d] = %s\n", i, strtab[i]);
+		i++;
+	}
+	ft_printf("Returning from msh_doublequotes()\n");
+	return (strtab);
+}
+
+/*
  *	This function takes one command line from stdin, replaces tabs with
  *	spaces, then splits the line into an array of strings using
  *	spaces as separator.
@@ -56,6 +133,13 @@ void	msh_normalize_blanks(char *c)
  *	Info
  *	Bash metacharacters: A character that, when unquoted, separates words
  *	' ', ‘|’, ‘&’, ‘;’, ‘(’, ‘)’, ‘<’, or ‘>’.
+ *
+ *
+ *	si ('\' a la fin)
+ *		gnl - continuer la lecture sur stdin
+ *	si ('"')
+ *		rechercher le suivant (sauf \") et dupliquer la chaine sans les EC
+ *			si pas de suivant, continuer lecture stdin (ajouter dquote>)
 */
 char	**msh_parse_line(char *line)
 {
@@ -70,7 +154,11 @@ char	**msh_parse_line(char *line)
 		msh_error_exit("malloc allocation fail on ft_strtrim\n", -1);
 	if (MSH_DEBUG_MODE)
 		ft_printf("ns_parse_line, normalized and trimmed line = '%s'\n", buf);
-	tab = ft_strsplit(buf, ' ');
+	
+//	tab = ft_strsplit(buf, ' ');
+	
+	tab = msh_doublequotes(line);
+
 	ft_strdel(&buf);
 	i = 0;
 	while (tab && tab[i])
