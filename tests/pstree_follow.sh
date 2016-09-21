@@ -1,6 +1,7 @@
 #!/bin/bash
 
 pid=`pidof minishell`
+os=`uname -s`
 while [ 1 ]
 do
 	clear
@@ -9,13 +10,21 @@ do
 		echo "No minishell running"
 		pid=`pidof minishell`
 	else
-		output=`pstree -cpg $pid`
-		if [ -z $output ]
+		if [ $os = "Darwin" ]
+		then
+			output=`pstree $pid`
+		else
+			output=`pstree -cpg $pid`
+		fi
+		if [ -z "$output" ]
 		then
 			pid=""
 		fi
 		echo "$output"
-		echo -e "\nprocess(pid,gpid)"
+		if [ $os != "Darwin" ]
+		then
+			echo -e "\nprocess(pid,gpid)"
+		fi
 	fi
 	sleep 1
 done
