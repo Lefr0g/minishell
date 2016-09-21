@@ -78,3 +78,28 @@ char	**ft_strarray_new(size_t size)
 	}
 	return (array);
 }
+
+char	**ft_strarray_add(char ***in_array, char *new)
+{
+	int		i;
+	char	**out_array;
+
+	i = 0;
+	if (!in_array)
+		i = 1;
+	else
+	{
+		while (in_array[0][i])
+			i++;
+	}
+	out_array = ft_strarray_new(i + 2);
+	i = 0;
+	while (in_array[0][i])
+	{
+		out_array[i] = ft_strdup(in_array[0][i]);
+		i++;
+	}
+	out_array[i] = ft_strdup(new);
+	ft_strarray_del(in_array);
+	return (out_array);
+}

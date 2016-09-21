@@ -113,5 +113,6 @@ int		ft_putstr_color_each(char *str, char *color);
 char	*ft_strarray_chr(char *needle, char **haystack);
 int		ft_strcnt(char *needle, int c);
 char	**ft_strarray_new(size_t size);
+char	**ft_strarray_add(char ***in_array, char *new);
 
 #endif
