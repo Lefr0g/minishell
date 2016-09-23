@@ -1,14 +1,13 @@
 #!/bin/bash
 
-pid=`pidof minishell`
 os=`uname -s`
 while [ 1 ]
 do
+	pid=`pidof minishell`
 	clear
-	if [ -z $pid ]
+	if [ -z "$pid" ]
 	then
-		echo "No minishell running"
-		pid=`pidof minishell`
+		echo -n "No minishell running "
 	else
 		if [ $os = "Darwin" ]
 		then

@@ -55,24 +55,29 @@ void	msh_fork(char **args, t_msh_vars *v)
  *	- Search file on path and execute
  *	- Repeat
 */
+
 int		msh_main_loop(t_msh_vars *v)
 {
 	char	*line;
-	char	**args;
 	char	*buf;
+	char	***cmds;
+	int		i;
 
 	line = ft_strnew(10);
-	msh_print_prompt();
-	while ((get_next_line(STDIN_FILENO, &line)!= -1))
+	while (!msh_print_prompt() && (get_next_line(STDIN_FILENO, &line)!= -1))
 	{
-		args = msh_parse_line(line);
-		if (args && args[0] && (buf = msh_is_builtin(args[0], v->builtin_name)))
-			msh_handle_builtin(args, v);
-		else if (args && args[0])
-			msh_fork(args, v);
-		if (args)
-			ft_strarray_del(&args);
-		msh_print_prompt();
+		cmds = msh_parse_line(line);
+		i = 0;
+		while (cmds && cmds[i])
+		{
+			if (cmds[i][0] && (buf = msh_is_builtin(cmds[i][0], v->builtin_name)))
+				msh_handle_builtin(cmds[i], v);
+			else if (cmds[i][0])
+				msh_fork(cmds[i], v);
+			i++;
+		}
+		if (cmds)
+			ft_strarray_del(cmds);
 	}
 	return (0);
 }

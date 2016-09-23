@@ -21,20 +21,32 @@ int		msh_handle_exit(char **args)
 
 int		msh_handle_echo(char **args)
 {
-	char	*buf;
 	int		i;
+	int		no_newline;
 
 	i = 0;
-	while (args[i])
+	no_newline = 0;
+	while (MSH_DEBUG_MODE && args[i])
 	{
 		ft_printf("args[%d] = %s\n", i, args[i]);
 		i++;
 	}
-
-	(void)args;
-	buf = ft_strnew(1);
-	get_next_line(STDIN_FILENO, &buf);
-	ft_putendl(buf);
+	if (!ft_strcmp(args[1], "-n"))
+	{
+		no_newline = 1;
+		args[1][0] = '\0';
+		i = 2;
+	}
+	else
+		i = 1;
+	while (args[i])
+	{
+		ft_putstr(args[i]);
+		ft_putchar(' ');
+		i++;
+	}
+	if (!no_newline)
+		ft_putchar('\n');
 	return (0);
 }
 

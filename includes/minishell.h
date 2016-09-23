@@ -71,7 +71,10 @@ int		msh_handle_default(char **args);
 **	msh_parsing.c
 */
 void	msh_normalize_blanks(char *c);
-char	**msh_parse_line(char *line);
+char	**msh_parse_line_old(char *line);
+char	***msh_parse_line(char *line);
+int		msh_parse_line_init_vars(char ****cmds, const char *line, int **i);
+char	*msh_escape_semicolon(char *str);
 
 /*
 **	msh_process.c

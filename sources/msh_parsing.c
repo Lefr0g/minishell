@@ -19,39 +19,6 @@ void	msh_normalize_blanks(char *c)
 }
 
 /*
-**	Cut the given line into a string array according to the double quotes
-**	parsing rule
-*/
-
-char	**msh_doublequotes(char *line)
-{
-	(void)line;
-	char	**array;
-
-	array = ft_strarray_new(3);
-	array[0] = ft_strdup("Hello there");
-	array[1] = ft_strdup("wubba lubba dub dub");
-	array[2] = NULL;
-	int		i;
-
-	i = 0;
-	while (array[i])
-	{
-		ft_printf("array[%d] = %s\n", i, array[i]);
-		i++;
-	}
-	array = ft_strarray_add(&array, line);
-	i = 0;
-	while (array[i])
-	{
-		ft_printf("array[%d] = %s\n", i, array[i]);
-		i++;
-	}
-	ft_printf("End of msh_doublequotes\n");
-	return (array);
-}
-
-/*
  *	This function takes one command line from stdin, replaces tabs with
  *	spaces, then splits the line into an array of strings using
  *	spaces as separator.
@@ -95,9 +62,13 @@ char	**msh_doublequotes(char *line)
  *		gnl - continuer la lecture sur stdin
  *	si ('"')
  *		rechercher le suivant (sauf \") et dupliquer la chaine sans les EC
- *			si pas de suivant, continuer lecture stdin (ajouter dquote>)
+ *			si pas de suivant, continuer lecture stdin (ajouter dquote>)i
+ *
+ *	Update:
+ *	These functionnalities are overkill for minishell. For this project we
+ *	will keep our parsing as simple as possible.
 */
-char	**msh_parse_line(char *line)
+char	**msh_parse_line_old(char *line)
 {
 	char	**tab;
 	char	*buf;
@@ -111,13 +82,13 @@ char	**msh_parse_line(char *line)
 	if (MSH_DEBUG_MODE)
 		ft_printf("ns_parse_line, normalized and trimmed line = '%s'\n", buf);
 	
-//	tab = ft_strsplit(buf, ' ');
-	
-	tab = msh_doublequotes(line);
+	tab = ft_strsplit(buf, ' ');
 
-	ft_printf("Check 0\n");
+//	Quoting / escaping and other advanced string features are out of scope
+//	for minishell. To be implemented on 21sh / 42sh instead.	
+//	tab = msh_doublequotes(line);
+
 	ft_strdel(&buf);
-	ft_printf("Check 1\n");
 	i = 0;
 	while (tab && tab[i])
 	{
@@ -128,4 +99,98 @@ char	**msh_parse_line(char *line)
 		i++;
 	}
 	return (tab);
+}
+
+/*
+**	Experimental: this alternative is designed to support multiple commands
+**	on the same line, separated by ;
+*/
+char	***msh_parse_line(char *line)
+{
+	char	***args;
+	char	*buf;
+	int		*i;
+
+	if (msh_parse_line_init_vars(&args, line, &i))
+		return (NULL);
+	while (line[++i[0]])
+		if ((line[i[0]] == ';' && i[0] > 0 && line[i[0] - 1] != '\\')
+				|| (!line[i[0] + 1]))
+		{
+			buf = ft_strnew(i[0] - i[1] + 1);
+			ft_strncpy(buf, &line[i[1]], i[0] - i[1] + (!line[i[0] + 1]));
+			ft_striter(buf, &msh_normalize_blanks);
+			msh_escape_semicolon(buf);
+			args[i[2]] = ft_strsplit(buf, ' ');
+			ft_strdel(&buf);
+			i[2]++;
+			i[0]++;
+			i[1] = i[0];
+		}
+	args[i[2]] = NULL;
+	i[0] = 0;
+
+	while (MSH_DEBUG_MODE && args[i[0]])
+	{
+		i[1] = 0;
+		while (args[i[0]][i[1]])
+		{
+			ft_printf("args[%d][%d] = %s\n", i[0], i[1], args[i[0]][i[1]]);
+			i[1]++;
+		}
+		ft_putchar('\n');
+		i[0]++;
+	}
+
+	return (args);
+}
+
+int		msh_parse_line_init_vars(char ****cmds, const char *line, int **i)
+{
+	int	cnt;
+
+	if (!(*i = (int*)ft_memalloc(sizeof(int) * 3)))
+		return (1);
+	cnt = 1;
+	cnt += ft_strcnt((char*)line, ';');
+	if (!(*cmds = (char***)malloc(sizeof(char**) * cnt + 1)))
+		return (1);
+	i[0][0] = -1;
+	i[0][2] = 0;
+	return (0);
+}
+
+/*
+**	This function is designed to remove single ';' that may remain at the
+**	start and end of the string, and also to transform escaped "\;" into
+**	single ';'
+**	Ideally no memory reallocation will be needed
+*/
+
+char	*msh_escape_semicolon(char *str)
+{
+	int		i;
+	int		j;
+	char	*cpy;
+
+	if (!ft_strcnt(str, ';'))
+		return (str);
+	cpy = ft_strdup(str);
+	ft_bzero(str, ft_strlen(cpy));
+	i = 0;
+	j = 0;
+	while (cpy[i])
+	{
+		if (cpy[i] == ';' && (!i || !cpy[i + 1]))
+			i++;
+		else if (cpy[i] == '\\' && cpy[i + 1] == ';')
+		{
+			str[j] = ';';
+			i += 2;
+			j++;
+		}
+		else
+			str[j++] = cpy[i++];
+	}
+	return (str);
 }
