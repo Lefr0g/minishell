@@ -34,7 +34,7 @@
 // TODO: add all relevant codes and functions to errmgmt.h
 # define EX_ILLEG 127 // command not found
 
-typedef int(*t_builtin_handler)(char **args);
+typedef int(*t_builtin_handler)(char **args, char **env);
 
 typedef struct	s_msh_vars
 {
@@ -63,9 +63,10 @@ int		msh_init_vars(t_msh_vars *v);
 char	*msh_is_builtin(char *cmd, char **builtins);
 int		msh_handle_builtin(char **args, t_msh_vars *v);
 int		msh_get_builtin_index(char *cmd, char **builtins);
-int		msh_handle_exit(char **args);
-int		msh_handle_echo(char **args);
-int		msh_handle_default(char **args);
+int		msh_handle_exit(char **args, char **env);
+int		msh_handle_echo(char **args, char **env);
+int		msh_handle_cd(char **args, char **env);
+int		msh_handle_default(char **args, char **env);
 
 /*
 **	msh_parsing.c
@@ -117,5 +118,7 @@ char	*ft_strarray_chr(char *needle, char **haystack);
 int		ft_strcnt(char *needle, int c);
 char	**ft_strarray_new(size_t size);
 char	**ft_strarray_add(char ***in_array, char *new);
+int		ft_strstrcnt(char *haystack, char *needle);
+char	*ft_find_and_replace(char *haystack, char *needle, int n, char *new);
 
 #endif

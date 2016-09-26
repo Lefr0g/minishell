@@ -12,17 +12,19 @@
 
 #include "minishell.h"
 
-int		msh_handle_exit(char **args)
+int		msh_handle_exit(char **args, char **env)
 {
 	(void)args;
+	(void)env;
 	exit(0);
 	return (0);
 }
 
-int		msh_handle_echo(char **args)
+int		msh_handle_echo(char **args, char **env)
 {
 	int		i;
 	int		no_newline;
+	(void)env;
 
 	i = 0;
 	no_newline = 0;
@@ -50,9 +52,41 @@ int		msh_handle_echo(char **args)
 	return (0);
 }
 
-int		msh_handle_default(char **args)
+int		msh_handle_cd(char **args, char **env)
+{
+	char	*buf;
+	char	*home;
+	(void)env;
+
+	home = msh_getenv("HOME", env);
+	ft_printf("Home is '%s'\n", home);
+
+
+	int	i;
+	char	*hay;
+	char	*needle;
+
+	hay = ft_strdup("gsrejdekdjfgjdedf;kgjskde");
+	needle = ft_strdup("de");
+	i = ft_strstrcnt(hay, needle);
+	ft_printf("There are %d instances of '%s' within '%s'\n", i, needle, hay);
+
+	buf = ft_find_and_replace(hay, needle, 0, "iiiiiiiiiiiiii");
+	ft_printf("%s\n", buf);
+	if (ft_strchr(args[1], '~'))
+		// Remplacer ~ par le home
+	buf = getcwd(NULL, 0);
+	//ft_printf("cwd is '%s'\n", buf);
+	
+	if (chdir(args[1]))
+		ft_printf("chdir error with arg '%s'\n", args[1]);
+	return (0);
+}
+
+int		msh_handle_default(char **args, char **env)
 {
 	(void)args;
+	(void)env;
 	ft_printf("Default built-in handler\n");
 	return (0);
 }
@@ -72,7 +106,7 @@ int		msh_handle_builtin(char **args, t_msh_vars *v)
 	}
 	else if (MSH_DEBUG_MODE)
 		ft_printf("%s%s%s is a built-in\n", ANSI_FG_CYAN, args[0], ANSI_RESET);
-	v->builtin_func[i](args);
+	v->builtin_func[i](args, v->environ);
 	return (0);
 }
 
