@@ -6,7 +6,7 @@
 /*   By: amulin <amulin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/15 18:29:07 by amulin            #+#    #+#             */
-/*   Updated: 2016/09/15 18:29:08 by amulin           ###   ########.fr       */
+/*   Updated: 2016/09/26 16:37:32 by amulin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,7 @@ int	msh_exec_cwd(char *file, char **argv, t_msh_vars *v)
 
 /*
 **	Target flow:
-**	- If command is a built-in execute it
-**	- else if command has 1 or more '/' in it, try to run it without path
+**	- if command has 1 or more '/' in it, try to run it without path
 **	- else try to run the command appended to each paths
 */
 int	msh_exec(char *file, char **argv, t_msh_vars *v)

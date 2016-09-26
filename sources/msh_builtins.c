@@ -6,7 +6,7 @@
 /*   By: amulin <amulin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/15 18:07:18 by amulin            #+#    #+#             */
-/*   Updated: 2016/09/16 17:15:05 by amulin           ###   ########.fr       */
+/*   Updated: 2016/09/26 17:15:09 by amulin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,32 +54,26 @@ int		msh_handle_echo(char **args, char **env)
 
 int		msh_handle_cd(char **args, char **env)
 {
-	char	*buf;
+	char	*target;
 	char	*home;
 	(void)env;
 
 	home = msh_getenv("HOME", env);
-	ft_printf("Home is '%s'\n", home);
+//	ft_printf("Home is '%s'\n", home);
 
-
-	int	i;
-	char	*hay;
-	char	*needle;
-
-	hay = ft_strdup("gsrejdekdjfgjdedf;kgjskde");
-	needle = ft_strdup("de");
-	i = ft_strstrcnt(hay, needle);
-	ft_printf("There are %d instances of '%s' within '%s'\n", i, needle, hay);
-
-	buf = ft_find_and_replace(hay, needle, 0, "iiiiiiiiiiiiii");
-	ft_printf("%s\n", buf);
-	if (ft_strchr(args[1], '~'))
-		// Remplacer ~ par le home
-	buf = getcwd(NULL, 0);
-	//ft_printf("cwd is '%s'\n", buf);
+	target = NULL;
+	if (!args[1])
+		target = ft_strdup(home);
+	else if (ft_strchr(args[1], '~'))
+		target = ft_find_and_replace(args[1], "~", 0, home);
+	else
+		target = ft_strdup(args[1]);
+	ft_printf("calling chdir on %s\n", target);
 	
-	if (chdir(args[1]))
-		ft_printf("chdir error with arg '%s'\n", args[1]);
+	if (chdir(target))
+		ft_printf("cd: no such file or directory: '%s'\n", args[1]);
+	ft_strdel(&target);
+	ft_strdel(&home);
 	return (0);
 }
 
