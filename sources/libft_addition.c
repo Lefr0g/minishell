@@ -143,15 +143,8 @@ char	**ft_strarray_new(size_t size)
 	if (!(array = (char**)malloc(sizeof(char*) * size + 1)))
 		return (NULL);
 	i = 0;
-	while (i < size)
+	while (i <= size)
 	{
-	/*
-		if (!(array[i] = ft_strnew(1)))
-		{
-			ft_strarray_del(&array);
-			return (NULL);
-		}
-	*/
 		array[i] = NULL;
 		i++;
 	}

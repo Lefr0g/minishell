@@ -6,7 +6,7 @@
 /*   By: amulin <amulin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/15 18:07:18 by amulin            #+#    #+#             */
-/*   Updated: 2016/09/26 17:15:09 by amulin           ###   ########.fr       */
+/*   Updated: 2016/09/27 19:19:59 by amulin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,68 +53,76 @@ int		msh_handle_echo(char **args, char **env)
 }
 
 /*
-**	Basic options parser for builtin
-**	Each char included in 'options' is searched within each 'args' starting
-**	with '-'
-**	The flags are returned in order right to left as bits flip within the int
-**	Option precedence is not managed by this function
+**	This function parses the input args for cd, searching for options.
+**	'mode' is a pointer to a 1 character string, containing the letter L or P
+**	if a valid option or no option is specified. An unsupported option will point
+**	'mode' to an empty string.
+**	Upon success, the function returns a pointer to the argument to be used as
+**	argument for chdir(). Notice that if no argument is given the function returns
+**	NULL, which doesn't mean a problem occured.
+**	Valid options will be deleted from the input 'args' string array
 */
-int		msh_parse_cd_options(char **args, char *options)
+char	*msh_parse_cd(char **args, char *mode)
 {
+	char	**supported_options;
+	char	**parsed_options;
+	char	ret;
 	int		i;
-	int		j;
-	int		p_opt;
-	int		flag;
 
-	flag = 0;
-	i = 1;
-	p_opt = 0;
-	while (args[i])
+	parsed_options = NULL;
+//	Defining supported options
+	supported_options = ft_strarray_new(3);
+	supported_options[0] = ft_strdup("P");
+	supported_options[1] = ft_strdup("L");
+	supported_options[2] = ft_strdup("");
+//	Parsing options
+	ret = ft_parse_options_keep_doubles(args, supported_options, &parsed_options);
+	ft_strarray_del(&supported_options);
+	if (ret) // Invalid option abort
 	{
-		j = 0;
-		while (args[i][j])
-		{
-			if (args[i][0] == '-')
-			{
-				flag = 1;
-				if (args[i][j] == 'P')
-					p_opt = 1;
-				else if (args[i][j] == 'L')
-					p_opt = 0;
-				else
-					return (-1);
-			}
-			j++;
-		}
-		if (flag)
-			ft_strdel(args[i])
+		ft_printf("%s: cd: -%c: invalid option\n");
+		ft_printf("cd: usage: cd [-L|-P] [dir]\n");
+		ft_strclr(mode);
+		return (NULL);
 	}
-	return (p_opt);
+//	Make sure the last option parsed have the priority
+	i = -1;
+	while (parsed_options && parsed_options[++i])
+		mode[0] = parsed_options[i][0];
+	i = 0;
+//	Determine the return value
+	while (args && args[++i])
+		if (args[i][0])
+			return (args[i]);
+	return (NULL);
 }
 
 int		msh_handle_cd(char **args, char **env)
 {
 	char	*target;
 	char	*home;
-	int		option;
-	
+	char	*directory;
+	char	*mode;
+
+
 	home = msh_getenv("HOME", env);
 
-	option = msh_parse_cd_options(args);
-
-//	ft_printf("Home is '%s'\n", home);
-
+	ft_printf("Home is '%s'\n", home);
+	mode = ft_strdup("L");
+	directory = msh_parse_cd(args, mode);
+	ft_printf("The argument to be processed is '%s'\n", directory);
+	ft_printf("The option is '%s'\n", mode);
 	target = NULL;
-	if (!args[1])
+	if (!directory)
 		target = ft_strdup(home);
-	else if (ft_strchr(args[1], '~'))
-		target = ft_find_and_replace(args[1], "~", 0, home);
+	else if (ft_strchr(directory, '~'))
+		target = ft_find_and_replace(directory, "~", 0, home);
 	else
-		target = ft_strdup(args[1]);
+		target = ft_strdup(directory);
 	ft_printf("calling chdir on %s\n", target);
 	
 	if (chdir(target))
-		ft_printf("cd: no such file or directory: '%s'\n", args[1]);
+		ft_printf("cd: no such file or directory: '%s'\n", target);
 	ft_strdel(&target);
 	ft_strdel(&home);
 	return (0);
