@@ -52,13 +52,56 @@ int		msh_handle_echo(char **args, char **env)
 	return (0);
 }
 
+/*
+**	Basic options parser for builtin
+**	Each char included in 'options' is searched within each 'args' starting
+**	with '-'
+**	The flags are returned in order right to left as bits flip within the int
+**	Option precedence is not managed by this function
+*/
+int		msh_parse_cd_options(char **args, char *options)
+{
+	int		i;
+	int		j;
+	int		p_opt;
+	int		flag;
+
+	flag = 0;
+	i = 1;
+	p_opt = 0;
+	while (args[i])
+	{
+		j = 0;
+		while (args[i][j])
+		{
+			if (args[i][0] == '-')
+			{
+				flag = 1;
+				if (args[i][j] == 'P')
+					p_opt = 1;
+				else if (args[i][j] == 'L')
+					p_opt = 0;
+				else
+					return (-1);
+			}
+			j++;
+		}
+		if (flag)
+			ft_strdel(args[i])
+	}
+	return (p_opt);
+}
+
 int		msh_handle_cd(char **args, char **env)
 {
 	char	*target;
 	char	*home;
-	(void)env;
-
+	int		option;
+	
 	home = msh_getenv("HOME", env);
+
+	option = msh_parse_cd_options(args);
+
 //	ft_printf("Home is '%s'\n", home);
 
 	target = NULL;
