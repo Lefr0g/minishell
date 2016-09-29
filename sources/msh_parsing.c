@@ -111,7 +111,7 @@ char	***msh_parse_line(char *line)
 	char	*buf;
 	int		*i;
 
-	if (msh_parse_line_init_vars(&args, line, &i))
+	if (!ft_strlen(line) || msh_parse_line_init_vars(&args, line, &i))
 		return (NULL);
 	while (line[++i[0]])
 		if ((line[i[0]] == ';' && i[0] > 0 && line[i[0] - 1] != '\\')
@@ -153,10 +153,9 @@ int		msh_parse_line_init_vars(char ****cmds, const char *line, int **i)
 		return (1);
 	cnt = 1;
 	cnt += ft_strcnt((char*)line, ';');
-	if (!(*cmds = (char***)malloc(sizeof(char**) * cnt + 1)))
+	if (!(*cmds = (char***)ft_memalloc(sizeof(char**) * cnt + 1)))
 		return (1);
 	i[0][0] = -1;
-	i[0][2] = 0;
 	return (0);
 }
 

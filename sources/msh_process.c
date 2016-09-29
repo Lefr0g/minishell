@@ -64,6 +64,7 @@ int		msh_main_loop(t_msh_vars *v)
 	int		i;
 
 	line = ft_strnew(10);
+	cmds = NULL;
 	while (!msh_print_prompt() && (get_next_line(STDIN_FILENO, &line)!= -1))
 	{
 		cmds = msh_parse_line(line);

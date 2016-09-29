@@ -80,7 +80,7 @@ char	*msh_parse_cd(char **args, char *mode)
 	ft_strarray_del(&supported_options);
 	if (ret) // Invalid option abort
 	{
-		ft_printf("%s: cd: -%c: invalid option\n");
+		ft_printf("%s: cd: -%c: invalid option\n", PROG_NAME, ret);
 		ft_printf("cd: usage: cd [-L|-P] [dir]\n");
 		ft_strclr(mode);
 		return (NULL);
