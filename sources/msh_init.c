@@ -27,19 +27,19 @@ int		msh_init_builtins_names(t_msh_vars *v)
 	return (0);
 }
 
-int		msh_init_builtins_handlers(t_msh_vars *v)
+int		msh_init_builtins_handlers(t_builtin_handler *builtin_func)
 {
-	if (!(v->builtin_func =
+	if (!(builtin_func =
 				(t_builtin_handler*)malloc(sizeof(t_builtin_handler)
 					* MSH_BUILTINS_ARRAY_SIZE)))
 		return (-1);
-	v->builtin_func[0] = &msh_handle_echo;
-	v->builtin_func[1] = &msh_handle_cd;
-	v->builtin_func[2] = &msh_handle_default;
-	v->builtin_func[3] = &msh_handle_default;
-	v->builtin_func[4] = &msh_handle_default;
-	v->builtin_func[5] = &msh_handle_exit;
-	v->builtin_func[6] = &msh_handle_default;
+	builtin_func[0] = &msh_handle_echo;
+	builtin_func[1] = &msh_handle_cd;
+	builtin_func[2] = &msh_handle_default;
+	builtin_func[3] = &msh_handle_default;
+	builtin_func[4] = &msh_handle_default;
+	builtin_func[5] = &msh_handle_exit;
+	builtin_func[6] = &msh_handle_default;
 	return (0);
 }
 
@@ -51,6 +51,6 @@ int		msh_init_vars(t_msh_vars *v)
 	v->locales = (char**)malloc(sizeof(char*));
 	ft_bzero(&(v->locales[0]), 1);
 	msh_init_builtins_names(v);
-	msh_init_builtins_handlers(v);
+//	msh_init_builtins_handlers(v);
 	return (0);
 }

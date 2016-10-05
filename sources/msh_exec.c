@@ -24,6 +24,11 @@ int	msh_getcwd(t_msh_vars *v)
 	return (0);
 }
 
+/*
+**	Handles inputs containing '/' by resolving the path and trying to exec
+**	This function refreshes cwd
+*/
+
 int	msh_exec_cwd(char *file, char **argv, t_msh_vars *v)
 {
 	int	ret;

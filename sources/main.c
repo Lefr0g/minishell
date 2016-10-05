@@ -14,8 +14,13 @@
 
 int		main(int ac, char **av)
 {
-	t_msh_vars	v;
+	t_msh_vars			v;
+	t_builtin_handler	**builtin_func;
+	
 	msh_init_vars(&v);
+	builtin_func = (t_builtin_handler**)ft_memalloc(sizeof(t_builtin_handler*));
+	*builtin_func = NULL;
+	msh_init_builtins_handlers(*builtin_func);
 
 	(void)v;
 	(void)av;
@@ -29,7 +34,7 @@ int		main(int ac, char **av)
 		ft_putstr("Invalid argument. This program doesn't take any.\n");
 	else
 	{
-		msh_main_loop(&v);
+		msh_main_loop(&v, builtin_func);
 	}
 	return (0);
 }

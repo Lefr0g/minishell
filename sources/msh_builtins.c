@@ -12,6 +12,15 @@
 
 #include "minishell.h"
 
+/*
+**	Built-ins to be implemented:
+**	env
+**	setenv
+**	unsetenv
+**	cd
+**	exit
+*/
+
 int		msh_handle_exit(char **args, char **env)
 {
 	(void)args;
@@ -55,11 +64,11 @@ int		msh_handle_echo(char **args, char **env)
 /*
 **	This function parses the input args for cd, searching for options.
 **	'mode' is a pointer to a 1 character string, containing the letter L or P
-**	if a valid option or no option is specified. An unsupported option will point
-**	'mode' to an empty string.
+**	if a valid option or no option is specified. An unsupported option will
+**	point 'mode' to an empty string.
 **	Upon success, the function returns a pointer to the argument to be used as
-**	argument for chdir(). Notice that if no argument is given the function returns
-**	NULL, which doesn't mean a problem occured.
+**	argument for chdir(). Notice that if no argument is given the function
+**	returns NULL, which doesn't mean a problem occured.
 **	Valid options will be deleted from the input 'args' string array
 */
 char	*msh_parse_cd(char **args, char *mode)
@@ -97,6 +106,16 @@ char	*msh_parse_cd(char **args, char *mode)
 	return (NULL);
 }
 
+/*
+**	Note: a call to getcwd() will automatically resolve symlinks to directories.
+**	Therefore, the -L option requires that a string containing the unresolved
+**	cwd path must be manually managed and saved as an internal shell variable.
+**	On the other hand. the -P option can be simply implemented using getcwd()
+**	Also, since passing '-' as a parameter to cd returns to the previous cwd,
+**	a copy of the manually managed cwd must be made and saved as an internal
+**	shell variable before changing directory
+*/
+
 int		msh_handle_cd(char **args, char **env)
 {
 	char	*target;
@@ -106,8 +125,10 @@ int		msh_handle_cd(char **args, char **env)
 
 
 	home = msh_getenv("HOME", env);
-
 	ft_printf("Home is '%s'\n", home);
+
+	ft_printf("cwd is '%s'\n", getcwd(NULL, 0));
+
 	mode = ft_strdup("L");
 	directory = msh_parse_cd(args, mode);
 	ft_printf("The argument to be processed is '%s'\n", directory);
@@ -125,6 +146,7 @@ int		msh_handle_cd(char **args, char **env)
 		ft_printf("cd: no such file or directory: '%s'\n", target);
 	ft_strdel(&target);
 	ft_strdel(&home);
+	ft_printf("cwd is '%s'\n", getcwd(NULL, 0));
 	return (0);
 }
 
@@ -140,7 +162,7 @@ int		msh_handle_default(char **args, char **env)
 **	Call the relevant routine for the given command
 */
 
-int		msh_handle_builtin(char **args, t_msh_vars *v)
+int		msh_handle_builtin(char **args, t_msh_vars *v, t_builtin_handler **func)
 {
 	int	i;
 
@@ -151,7 +173,7 @@ int		msh_handle_builtin(char **args, t_msh_vars *v)
 	}
 	else if (MSH_DEBUG_MODE)
 		ft_printf("%s%s%s is a built-in\n", ANSI_FG_CYAN, args[0], ANSI_RESET);
-	v->builtin_func[i](args, v->environ);
+	func[0][i](args, v->environ);
 	return (0);
 }
 

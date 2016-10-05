@@ -19,7 +19,7 @@
 
 # define PROG_NAME "minishell"
 
-# define MSH_DEBUG_MODE 0
+# define MSH_DEBUG_MODE 1
 # define MSH_BUILTINS_ARRAY_SIZE 7
 
 # define MSH_BUILTIN_0 "echo"
@@ -42,7 +42,8 @@ typedef struct	s_msh_vars
 	char				**locales;
 	char				**builtin_name;
 	char				*cwd;
-	t_builtin_handler	*builtin_func;
+	char				*old_wd;
+//	t_builtin_handler	*builtin_func;
 }				t_msh_vars;
 
 /*
@@ -54,14 +55,14 @@ int		main(int ac, char **av);
 **	msh_init.c
 */
 int		msh_init_builtins_names(t_msh_vars *v);
-int		msh_init_builtins_handlers(t_msh_vars *v);
+int		msh_init_builtins_handlers(t_builtin_handler *builtin_func);
 int		msh_init_vars(t_msh_vars *v);
 
 /*
 **	msh_builtins.c
 */
 char	*msh_is_builtin(char *cmd, char **builtins);
-int		msh_handle_builtin(char **args, t_msh_vars *v);
+int		msh_handle_builtin(char **args, t_msh_vars *v, t_builtin_handler **ft);
 int		msh_get_builtin_index(char *cmd, char **builtins);
 int		msh_handle_exit(char **args, char **env);
 int		msh_handle_echo(char **args, char **env);
@@ -80,7 +81,7 @@ char	*msh_escape_semicolon(char *str);
 /*
 **	msh_process.c
 */
-int		msh_main_loop(t_msh_vars *v);
+int		msh_main_loop(t_msh_vars *v, t_builtin_handler **builtin_func);
 void	msh_fork(char **args, t_msh_vars *v);
 
 /*

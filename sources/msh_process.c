@@ -56,7 +56,7 @@ void	msh_fork(char **args, t_msh_vars *v)
  *	- Repeat
 */
 
-int		msh_main_loop(t_msh_vars *v)
+int		msh_main_loop(t_msh_vars *v, t_builtin_handler **builtin_func)
 {
 	char	*line;
 	char	*buf;
@@ -72,7 +72,7 @@ int		msh_main_loop(t_msh_vars *v)
 		while (cmds && cmds[i])
 		{
 			if (cmds[i][0] && (buf = msh_is_builtin(cmds[i][0], v->builtin_name)))
-				msh_handle_builtin(cmds[i], v);
+				msh_handle_builtin(cmds[i], v, builtin_func);
 			else if (cmds[i][0])
 				msh_fork(cmds[i], v);
 			i++;
